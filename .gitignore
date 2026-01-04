@@ -19,3 +19,6 @@ Thumbs.db
 
 # Vite
 frontend/.vite
+
+# Local status notes
+docs/status.md
