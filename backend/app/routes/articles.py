@@ -49,9 +49,9 @@ def list_articles(
         query = query.filter(and_(*conditions))
 
     if sort == "score_desc":
-        query = query.order_by(desc(Analysis.sentiment_score.nullslast()))
+        query = query.order_by(desc(Analysis.sentiment_score).nullslast())
     else:
-        query = query.order_by(desc(Article.published_at.nullslast()))
+        query = query.order_by(desc(Article.published_at).nullslast())
 
     items = []
     for art, ana, src in query.all():
