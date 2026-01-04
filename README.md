@@ -34,7 +34,7 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 - 헬스체크: http://localhost:8000/health
-- 환경변수: `GEMINI_API_KEY`, `DATABASE_URL`(기본 sqlite:///./local.db), `ALLOWED_ORIGINS`
+- 환경변수: `GEMINI_API_KEY`, `DATABASE_URL`(기본 sqlite:///./local.db), `ALLOWED_ORIGINS`, `RSS_SOURCES`, `RATE_LIMIT_PER_MIN`
 
 ### 프런트엔드 (로컬)
 ```bash
@@ -44,12 +44,33 @@ npm run dev
 ```
 - 환경변수: `VITE_API_BASE_URL` (예: `http://localhost:8000`)
 
+### 환경 변수 예시
+```bash
+# backend
+GEMINI_API_KEY=your_gemini_key
+DATABASE_URL=sqlite:///./local.db
+ALLOWED_ORIGINS=["http://localhost:5173"]
+RATE_LIMIT_PER_MIN=60
+RSS_SOURCES=[{"name":"Example","url":"https://example.com/rss"}]
+
+# frontend
+VITE_API_BASE_URL=http://localhost:8000
+```
+
 ## 주요 기능
 - RSS 수집 및 중복 방지(해시)
 - Gemini 기반 요약/감성/키워드 추출
 - 기사 목록/검색/감성 필터, 상세 보기
 - CI: 프런트 lint/build, 백엔드 pytest
 - 배포: Vercel(프런트), Render(백엔드) 트리거 워크플로
+
+## API 개요
+- `GET /health`
+- `GET /articles` (q, sentiment, source, from, to, sort)
+- `GET /articles/{id}`
+- `GET /articles/{id}/analysis`
+- `GET /analyses/{id}`
+- `POST /admin/ingest/run` (RSS 수집→요약/감성 분석, 키 없으면 분석 생략)
 
 ## 남은 TODO(요약)
 - API 라우트 구현: `/articles`, `/analyses`, `/ingest/run`

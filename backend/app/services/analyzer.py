@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import json
-from typing import Any
+import time
+from collections import deque
+from typing import Any, Deque
 
 import httpx
 
@@ -14,11 +16,14 @@ GEMINI_URL = (
 
 
 class AnalyzerClient:
+    _calls: Deque[float] = deque()
+
     def __init__(self, api_key: str | None = None):
         settings = get_settings()
         self.api_key = api_key or settings.gemini_api_key
         if not self.api_key:
             raise RuntimeError("GEMINI_API_KEY not configured")
+        self.rate_limit_per_min = settings.rate_limit_per_min
 
     def _build_prompt(self, request: AnalyzeRequest) -> str:
         return (
@@ -32,6 +37,7 @@ class AnalyzerClient:
         )
 
     async def analyze(self, request: AnalyzeRequest) -> AnalysisResult:
+        self._respect_rate_limit()
         payload = {
             "contents": [
                 {
@@ -50,6 +56,18 @@ class AnalyzerClient:
         text = _extract_text(data)
         parsed = json.loads(text)
         return AnalysisResult(**parsed)
+
+    def _respect_rate_limit(self) -> None:
+        # 간단한 토큰 버킷: 1분 윈도우에서 설정된 호출 수를 초과하면 대기
+        now = time.time()
+        window = 60.0
+        while self._calls and now - self._calls[0] > window:
+            self._calls.popleft()
+        if len(self._calls) >= self.rate_limit_per_min:
+            sleep_time = window - (now - self._calls[0])
+            if sleep_time > 0:
+                time.sleep(sleep_time)
+        self._calls.append(time.time())
 
 
 def _extract_text(response_json: dict[str, Any]) -> str:

@@ -32,6 +32,37 @@ class ArticleOut(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class ArticleListItem(BaseModel):
+    id: int
+    title: str
+    link: str
+    published_at: Optional[datetime] = None
+    summary: Optional[str] = None
+    sentiment_label: Optional[str] = None
+    sentiment_score: Optional[float] = None
+    keywords: Optional[list[str]] = None
+
+    model_config = {"from_attributes": True}
+
+
+class ArticleListResponse(BaseModel):
+    items: list[ArticleListItem]
+
+
+class ArticleDetail(BaseModel):
+    id: int
+    title: str
+    link: str
+    published_at: Optional[datetime] = None
+    summary: Optional[str] = None
+    sentiment_label: Optional[str] = None
+    sentiment_score: Optional[float] = None
+    keywords: Optional[list[str]] = None
+    source_id: Optional[int] = None
+
+    model_config = {"from_attributes": True}
+
+
 class AnalysisOut(BaseModel):
     id: int
     article_id: int
@@ -70,4 +101,9 @@ class AnalysisResult(BaseModel):
     reason: str
     safety_flag: bool = False
     safety_reason: str = ""
+
+
+class IngestResponse(BaseModel):
+    fetched: int
+    analyzed: int
 

@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     database_url: str = "sqlite:///./local.db"
     allowed_origins: list[str] = ["*"]
     rate_limit_per_min: int = 60
+    rss_sources: list[dict[str, str]] | str | None = None
 
 
 @lru_cache
