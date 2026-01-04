@@ -9,7 +9,11 @@ from app.models import Base
 
 settings = get_settings()
 
-engine = create_engine(settings.database_url, future=True)
+# Render Postgres URL이 `postgres://` 형태로 올 경우 SQLAlchemy가 psycopg2 드라이버를 찾으려 함
+# psycopg v3를 사용하도록 스킴을 강제 변환
+db_url = settings.database_url.replace("postgres://", "postgresql+psycopg://", 1)
+
+engine = create_engine(db_url, future=True)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False, future=True)
 
 
