@@ -24,12 +24,12 @@ export default function ArticlesPage() {
 
   const handleFilter = (params: { q: string; sentiment: string; source: string; from: string; to: string; sort: string }) => {
     const next = new URLSearchParams(searchParams)
-    params.q ? next.set('q', params.q) : next.delete('q')
-    params.sentiment ? next.set('sentiment', params.sentiment) : next.delete('sentiment')
-    params.source ? next.set('source', params.source) : next.delete('source')
-    params.from ? next.set('from', params.from) : next.delete('from')
-    params.to ? next.set('to', params.to) : next.delete('to')
-    params.sort ? next.set('sort', params.sort) : next.delete('sort')
+    if (params.q) next.set('q', params.q); else next.delete('q')
+    if (params.sentiment) next.set('sentiment', params.sentiment); else next.delete('sentiment')
+    if (params.source) next.set('source', params.source); else next.delete('source')
+    if (params.from) next.set('from', params.from); else next.delete('from')
+    if (params.to) next.set('to', params.to); else next.delete('to')
+    if (params.sort) next.set('sort', params.sort); else next.delete('sort')
     setSearchParams(next)
   }
 
