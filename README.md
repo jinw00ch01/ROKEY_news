@@ -62,10 +62,7 @@ VITE_API_BASE_URL=http://localhost:8000
 - Gemini 기반 요약/감성/키워드 추출
 - 기사 목록/검색/감성 필터, 상세 보기
 - CI: 프런트 lint/build, 백엔드 pytest
-- 배포 옵션(무료 조합 예시)
-  - DB: Neon(Postgres)
-  - 백엔드: Fly.io Web Service (Docker)
-  - 프런트: Cloudflare Pages (정적 사이트)
+- 배포 옵션: Render(백엔드 Web Service, 프런트 Static, Postgres)
 
 ## API 개요
 - `GET /health`
@@ -85,8 +82,7 @@ VITE_API_BASE_URL=http://localhost:8000
 ## 배포 시크릿
 - 공통: `GEMINI_API_KEY`, `DATABASE_URL`, `ALLOWED_ORIGINS`, `RATE_LIMIT_PER_MIN`
 - 프런트: `VITE_API_BASE_URL`
-- Fly.io: `FLY_API_TOKEN`
-- Cloudflare Pages: `CF_API_TOKEN`, `CF_ACCOUNT_ID`
+- Render: `RENDER_SERVICE_ID`, `RENDER_STATIC_ID`, `RENDER_API_KEY`
 
 ## 참고
 - 상세 기획/설계: `docs/requirements.md`, `docs/architecture.md`, `docs/prompt-spec.md`, `docs/frontend-plan.md`, `docs/backend-plan.md`, `docs/ci-cd.md`
