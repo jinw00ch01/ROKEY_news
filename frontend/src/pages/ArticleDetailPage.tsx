@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router-dom'
 import { getArticle } from '../api'
-import { sentimentBadge } from '../components/ArticleCard'
+import { SentimentBadge } from '../components/ArticleCard'
 
 export default function ArticleDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -37,7 +37,7 @@ export default function ArticleDetailPage() {
                 : '발행일 미상'}
             </div>
           </div>
-          {sentimentBadge(data.sentiment_label)}
+          {data.sentiment_label && <SentimentBadge label={data.sentiment_label} />}
         </div>
         {data.summary && <p className="text-base text-slate-800">{data.summary}</p>}
         {data.keywords && data.keywords.length > 0 && (

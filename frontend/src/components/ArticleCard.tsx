@@ -11,7 +11,7 @@ const sentimentLabelMap: Record<string, string> = {
   negative: '부정',
 }
 
-function SentimentBadge({ label }: { label?: string }) {
+export function SentimentBadge({ label }: { label?: string }) {
   if (!label) return null
   const color =
     label === 'positive'
