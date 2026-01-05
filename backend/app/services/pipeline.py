@@ -113,7 +113,7 @@ async def run_ingest(db: Session) -> dict[str, int]:
                     sentiment_score=result.sentiment.score,
                     keywords=result.keywords,
                     json_meta={"reason": result.reason, "safety": result.safety_flag},
-                    model_name="gemini-1.5-flash",
+                    model_name="gemini-2.5-flash",
                 )
                 db.add(analysis)
                 analyzed_count += 1
