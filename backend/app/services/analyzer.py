@@ -10,9 +10,9 @@ import httpx
 from app.config import get_settings
 from app.schemas import AnalyzeRequest, AnalysisResult
 
-# Use v1 API instead of v1beta
+# Use gemini-pro which is more widely available
 GEMINI_URL = (
-    "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent"
+    "https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent"
 )
 
 
