@@ -54,7 +54,9 @@ class AnalyzerClient:
             "4. reason은 반드시 문자열로 제공 (빈 문자열이라도 \"\"로 제공)\n"
             "5. safety_flag는 개인정보/민감 표현 발견 시 true, 아니면 false\n"
             "6. safety_reason은 safety_flag가 true일 때만 내용 작성, 아니면 빈 문자열 \"\"\n"
-            "7. 절대 한글 필드명을 사용하지 마세요 (요약 X, summary O)\n\n"
+            "7. 절대 한글 필드명을 사용하지 마세요 (요약 X, summary O)\n"
+            "8. **중요: summary, reason 등의 텍스트에 큰따옴표(\")가 포함될 경우 반드시 작은따옴표(')로 대체하세요**\n"
+            '   예: "그는 "안녕"이라고 말했다" (X) → "그는 \'안녕\'이라고 말했다" (O)\n\n'
             f"입력 기사:\n{request.model_dump_json()}"
         )
 
