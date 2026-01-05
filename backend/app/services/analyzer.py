@@ -10,8 +10,9 @@ import httpx
 from app.config import get_settings
 from app.schemas import AnalyzeRequest, AnalysisResult
 
+# Use v1 API instead of v1beta
 GEMINI_URL = (
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
+    "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent"
 )
 
 
@@ -75,4 +76,3 @@ def _extract_text(response_json: dict[str, Any]) -> str:
         return response_json["candidates"][0]["content"]["parts"][0]["text"]
     except (KeyError, IndexError) as exc:
         raise ValueError("Unexpected Gemini response shape") from exc
-
