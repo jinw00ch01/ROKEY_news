@@ -46,14 +46,14 @@ export default function FilterBar({
   return (
     <form
       onSubmit={handleSubmit}
-      className="mb-4 grid gap-3 rounded-lg border border-slate-200 bg-white p-4 shadow-sm md:grid-cols-5 md:items-center"
+      className="mb-8 grid gap-8 border border-primary/20 bg-white p-6 shadow-sharp md:grid-cols-5 md:items-center"
     >
       <div className="md:col-span-2 flex items-center gap-2">
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="검색어(제목/본문/키워드)"
-          className="w-full rounded-md border border-slate-200 px-3 py-2 text-sm shadow-inner focus:border-slate-400 focus:outline-none"
+          className="w-full border border-primary/30 px-3 py-2 text-sm shadow-inner focus:border-primary focus:outline-none"
         />
       </div>
       <div className="flex items-center gap-2">
@@ -61,12 +61,12 @@ export default function FilterBar({
           value={source}
           onChange={(e) => setSource(e.target.value)}
           placeholder="출처"
-          className="w-32 rounded-md border border-slate-200 px-3 py-2 text-sm shadow-inner focus:border-slate-400 focus:outline-none"
+          className="w-32 border border-primary/30 px-3 py-2 text-sm shadow-inner focus:border-primary focus:outline-none"
         />
         <select
           value={sentiment}
           onChange={(e) => setSentiment(e.target.value)}
-          className="rounded-md border border-slate-200 px-3 py-2 text-sm shadow-inner focus:border-slate-400 focus:outline-none"
+          className="border border-primary/30 px-3 py-2 text-sm shadow-inner focus:border-primary focus:outline-none"
         >
           {sentimentOptions.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -77,7 +77,7 @@ export default function FilterBar({
         <select
           value={sort}
           onChange={(e) => setSort(e.target.value)}
-          className="rounded-md border border-slate-200 px-3 py-2 text-sm shadow-inner focus:border-slate-400 focus:outline-none"
+          className="border border-primary/30 px-3 py-2 text-sm shadow-inner focus:border-primary focus:outline-none"
         >
           {sortOptions.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -87,7 +87,7 @@ export default function FilterBar({
         </select>
         <button
           type="submit"
-          className="rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+          className="bg-primary px-5 py-2 text-sm font-semibold text-white transition-all duration-150 hover:-translate-y-0.5 hover:bg-secondary"
         >
           적용
         </button>
@@ -97,13 +97,13 @@ export default function FilterBar({
           type="date"
           value={fromDate}
           onChange={(e) => setFromDate(e.target.value)}
-          className="rounded-md border border-slate-200 px-3 py-2 text-sm shadow-inner focus:border-slate-400 focus:outline-none"
+          className="border border-primary/30 px-3 py-2 text-sm shadow-inner focus:border-primary focus:outline-none"
         />
         <input
           type="date"
           value={toDate}
           onChange={(e) => setToDate(e.target.value)}
-          className="rounded-md border border-slate-200 px-3 py-2 text-sm shadow-inner focus:border-slate-400 focus:outline-none"
+          className="border border-primary/30 px-3 py-2 text-sm shadow-inner focus:border-primary focus:outline-none"
         />
       </div>
     </form>

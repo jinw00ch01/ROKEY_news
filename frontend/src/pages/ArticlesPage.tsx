@@ -34,7 +34,7 @@ export default function ArticlesPage() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-16">
       <FilterBar
         defaultSearch={q}
         defaultSentiment={sentiment}
@@ -45,21 +45,21 @@ export default function ArticlesPage() {
         onChange={handleFilter}
       />
       {isLoading && (
-        <div className="grid gap-3">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-8">
           {[1, 2, 3].map((k) => (
             <SkeletonCard key={k} />
           ))}
         </div>
       )}
       {error && (
-        <div className="text-sm text-red-600">
+        <div className="text-sm text-error">
           데이터를 불러오지 못했습니다: {(error as Error).message}
         </div>
       )}
       {!isLoading && data && data.items.length === 0 && (
-        <div className="text-sm text-slate-500">표시할 기사가 없습니다.</div>
+        <div className="text-sm text-gray-600">표시할 기사가 없습니다.</div>
       )}
-      <div className="grid gap-3">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-8">
         {data?.items.map((article) => (
           <ArticleCard key={article.id} article={article} />
         ))}

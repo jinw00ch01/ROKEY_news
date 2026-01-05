@@ -3,12 +3,28 @@
 @tailwind utilities;
 
 :root {
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    sans-serif;
-  color: #0f172a;
-  background-color: #f8fafc;
+  font-family: 'Playfair Display', 'Noto Serif KR', Georgia, serif;
+  color: #1e1b4b;
+  background-color: #faf5ff;
 }
 
 body {
   margin: 0;
+}
+
+@layer utilities {
+  .slide-enter {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .slide-enter-active {
+    transform: translateX(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .slide-enter {
+      transition: none;
+    }
+  }
 }
