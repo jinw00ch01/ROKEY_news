@@ -18,25 +18,18 @@ logger = logging.getLogger(__name__)
 
 def _ensure_sources(db: Session) -> Dict[str, Source]:
     """
-    finnhub와 newsdata 소스가 DB에 존재하는지 확인하고, 없으면 생성합니다.
+    newsdata 소스가 DB에 존재하는지 확인하고, 없으면 생성합니다.
     """
     existing = db.query(Source).all()
     by_name = {s.name: s for s in existing}
-    
-    # finnhub 소스 확인
-    if "finnhub" not in by_name:
-        src = Source(name="finnhub", api_type="finnhub", active=True)
-        db.add(src)
-        db.flush()
-        by_name["finnhub"] = src
-    
+
     # newsdata 소스 확인
     if "newsdata" not in by_name:
         src = Source(name="newsdata", api_type="newsdata", active=True)
         db.add(src)
         db.flush()
         by_name["newsdata"] = src
-    
+
     db.commit()
     return by_name
 
@@ -65,14 +58,14 @@ async def run_ingest(db: Session) -> dict[str, int]:
         logger.warning("GEMINI_API_KEY not set, analysis will be skipped.")
     
     # API 키가 없으면 종료
-    if not settings.finnhub_api_key and not settings.newsdata_api_key:
-        logger.warning("No news API keys configured")
+    if not settings.newsdata_api_key:
+        logger.warning("NEWSDATA_API_KEY not configured")
         return {"fetched": 0, "analyzed": 0}
 
     sources = _ensure_sources(db)
-    
-    # finnhub와 NEWSDATA.io에서 뉴스 수집
-    fetched_items = await fetch_all_news(settings.finnhub_api_key, settings.newsdata_api_key)
+
+    # NEWSDATA.io에서 뉴스 수집
+    fetched_items = await fetch_all_news(settings.newsdata_api_key)
     
     analyzer = AnalyzerClient(api_key=settings.gemini_api_key) if settings.gemini_api_key else None
 
@@ -80,7 +73,7 @@ async def run_ingest(db: Session) -> dict[str, int]:
     analyzed_count = 0
 
     for item in fetched_items:
-        # source_name 파싱 (예: "finnhub:general", "newsdata:kr")
+        # source_name 파싱 (예: "newsdata:kr")
         api_type = item.source_name.split(":")[0]
         src = sources.get(api_type)
         
@@ -95,7 +88,7 @@ async def run_ingest(db: Session) -> dict[str, int]:
         fetched_count += 1
 
         if analyzer:
-            # Finnhub의 경우 summary가 짧거나 없을 수 있으므로 title과 결합
+            # 콘텐츠가 짧거나 없을 수 있으므로 title과 결합
             content_to_analyze = article.content_clean or ""
             if not content_to_analyze.strip() or len(content_to_analyze.strip()) < 50:
                 # 콘텐츠가 없거나 너무 짧으면 title을 포함

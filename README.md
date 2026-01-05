@@ -1,11 +1,10 @@
 # Rokey News 요약/감성 분석 웹앱
 
-finnhub와 NEWSDATA.io API를 통해 뉴스를 수집하고 Gemini로 요약/감성 분석하며, 웹에서 검색·필터링·열람할 수 있는 서비스입니다. 프런트(Vite+React)와 백엔드(FastAPI)로 구성됩니다.
+NEWSDATA.io API를 통해 뉴스를 수집하고 Gemini로 요약/감성 분석하며, 웹에서 검색·필터링·열람할 수 있는 서비스입니다. 프런트(Vite+React)와 백엔드(FastAPI)로 구성됩니다.
 
 ```mermaid
 flowchart TD
-  finnhub[finnhub API] --> fetcher[Fetcher]
-  newsdata[NEWSDATA.io API] --> fetcher
+  newsdata[NEWSDATA.io API] --> fetcher[Fetcher]
   fetcher --> preprocess[Clean]
   preprocess --> analyzer[Gemini Analyzer]
   analyzer --> db[(DB)]
@@ -20,7 +19,7 @@ flowchart TD
 - **Database**: SQLAlchemy 2.0.37 + PostgreSQL (psycopg 3.2.12)
 - **Migration**: Alembic 1.14.0
 - **AI**: Google Gemini API
-- **News APIs**: finnhub, NEWSDATA.io
+- **News API**: NEWSDATA.io
 
 ### Frontend
 - **Framework**: React 18 + TypeScript
@@ -45,8 +44,7 @@ graph LR
   A[frontend] -->|REST| B[(backend API)]
   B --> C[(PostgreSQL)]
   B --> D[Gemini API]
-  B --> E[finnhub API]
-  B --> F[NEWSDATA.io API]
+  B --> E[NEWSDATA.io API]
 ```
 
 ## 배포 (Render.com) - 필독!
@@ -67,7 +65,6 @@ Render Dashboard → Backend Web Service → **Environment** 탭에서 설정:
 | 환경 변수 | 값 예시 | 설명 |
 |---------|--------|-----|
 | `GEMINI_API_KEY` | `AIza...` | [Google AI Studio](https://ai.google.dev/)에서 발급 |
-| `FINNHUB_API_KEY` | `c...` | [finnhub](https://finnhub.io/)에서 발급 |
 | `NEWSDATA_API_KEY` | `pub_...` | [NEWSDATA.io](https://newsdata.io/)에서 발급 |
 | `DATABASE_URL` | `postgresql://...` | Render PostgreSQL의 **Internal Database URL** |
 | `ALLOWED_ORIGINS` | `https://your-frontend.onrender.com` | 프론트엔드 도메인 (CORS) |
@@ -94,7 +91,6 @@ Render Dashboard → Frontend Static Site → **Environment** 탭에서 설정:
 
 1. **API 키 발급**
    - [Google Gemini API](https://ai.google.dev/)
-   - [finnhub API](https://finnhub.io/)
    - [NEWSDATA.io API](https://newsdata.io/)
 
 ### 백엔드 (로컬)
@@ -136,8 +132,7 @@ npm run dev
 # AI API (필수)
 GEMINI_API_KEY=your_gemini_api_key_here
 
-# News APIs (필수)
-FINNHUB_API_KEY=your_finnhub_api_key_here
+# News API (필수)
 NEWSDATA_API_KEY=your_newsdata_api_key_here
 
 # Database (로컬 개발: SQLite)
@@ -160,7 +155,7 @@ VITE_API_BASE_URL=http://localhost:8000
 ## 주요 기능
 
 ### 구현 완료
-- ✅ finnhub & NEWSDATA.io API를 통한 뉴스 수집
+- ✅ NEWSDATA.io API를 통한 뉴스 수집
 - ✅ 중복 방지(해시 기반)
 - ✅ Gemini 기반 요약/감성 분석/키워드 추출
 - ✅ 기사 목록 조회 (검색, 감성 필터, 출처 필터, 날짜 필터, 정렬)
@@ -210,7 +205,6 @@ ALLOWED_ORIGINS=https://your-frontend.onrender.com
 
 **해결**: Render 환경 변수에서 다음을 확인:
 - `GEMINI_API_KEY` 올바른지
-- `FINNHUB_API_KEY` 올바른지
 - `NEWSDATA_API_KEY` 올바른지
 
 ### 3. DATABASE_URL 에러

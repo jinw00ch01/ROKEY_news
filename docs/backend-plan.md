@@ -1,15 +1,15 @@
 # 백엔드 설계 (FastAPI)
 
 ## 목표
-- finnhub 및 NEWSDATA.io API 수집 → 정규화 → Gemini 분석 → 저장 → 조회 API 제공.
+- NEWSDATA.io API 수집 → 정규화 → Gemini 분석 → 저장 → 조회 API 제공.
 - 개발: SQLite, 배포: Postgres 호환 유지.
 
 ## 모듈 구조 초안
 - `app/main.py`: FastAPI 엔트리, 라우터 등록, CORS.
-- `app/config.py`: env 로딩(`GEMINI_API_KEY`, `FINNHUB_API_KEY`, `NEWSDATA_API_KEY`, `DATABASE_URL`, `ALLOWED_ORIGINS`, `RATE_LIMIT_PER_MIN` 등).
+- `app/config.py`: env 로딩(`GEMINI_API_KEY`, `NEWSDATA_API_KEY`, `DATABASE_URL`, `ALLOWED_ORIGINS`, `RATE_LIMIT_PER_MIN` 등).
 - `app/models.py`: SQLAlchemy 모델(sources, articles, analyses).
 - `app/schemas.py`: Pydantic 응답/요청.
-- `app/services/news_fetcher.py`: finnhub 및 NEWSDATA.io API 호출, 중복 해시.
+- `app/services/news_fetcher.py`: NEWSDATA.io API 호출, 중복 해시.
 - `app/services/analyzer.py`: Gemini 호출, JSON 검증.
 - `app/services/pipeline.py`: 수집→정규화→분석 오케스트레이션.
 - `app/routes/articles.py`: 목록/상세/필터.

@@ -5,7 +5,6 @@
 ## 준비물
 - GitHub 저장소 (`main` 브랜치)
 - Google Gemini API 키 ([발급](https://ai.google.dev/))
-- finnhub API 키 ([발급](https://finnhub.io/))
 - NEWSDATA.io API 키 ([발급](https://newsdata.io/))
 - Render 계정
 
@@ -56,7 +55,6 @@ Render Web Service 설정 페이지 → **Environment** 탭에서 다음 환경 
 | 키 | 값 | 설명 |
 |---|---|---|
 | `GEMINI_API_KEY` | `your_gemini_key` | Google Gemini API 키 |
-| `FINNHUB_API_KEY` | `your_finnhub_key` | finnhub API 키 |
 | `NEWSDATA_API_KEY` | `your_newsdata_key` | NEWSDATA.io API 키 |
 | `DATABASE_URL` | `postgresql://...` | Render PostgreSQL Internal URL |
 | `ALLOWED_ORIGINS` | `https://your-frontend.onrender.com` | 프론트엔드 도메인 (CORS) |
@@ -202,7 +200,6 @@ ALLOWED_ORIGINS=https://your-frontend.onrender.com
 ### Q3: API 키 에러가 발생합니다
 **A**: 다음을 확인하세요:
 - `GEMINI_API_KEY`가 올바른지
-- `FINNHUB_API_KEY`가 올바른지
 - `NEWSDATA_API_KEY`가 올바른지
 - 각 API의 무료 플랜 제한을 초과하지 않았는지
 
@@ -221,8 +218,7 @@ alembic upgrade head
 - 환경 변수 오타, 의존성 설치 실패 등을 확인
 
 ### Q6: API 호출 제한을 초과했습니다
-**A**: 
-- finnhub: 무료 플랜은 60 calls/minute
+**A**:
 - NEWSDATA.io: 무료 플랜은 200 credits/day
 - 유료 플랜으로 업그레이드하거나 호출 빈도 조정
 
@@ -231,7 +227,6 @@ alembic upgrade head
 ### 백엔드 (Web Service)
 ```env
 GEMINI_API_KEY=your_gemini_key
-FINNHUB_API_KEY=your_finnhub_key
 NEWSDATA_API_KEY=your_newsdata_key
 DATABASE_URL=postgresql://user:password@host:5432/dbname
 ALLOWED_ORIGINS=https://your-frontend.onrender.com

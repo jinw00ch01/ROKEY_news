@@ -6,7 +6,7 @@
 
 ### 백엔드
 - ✅ 기본 스캐폴드: 설정 로더(`config.py`), 모델 정의(`models.py`), 스키마(`schemas.py`)
-- ✅ finnhub & NEWSDATA.io API 통합 (`services/news_fetcher.py`)
+- ✅ NEWSDATA.io API 통합 (`services/news_fetcher.py`)
 - ✅ Gemini 분석 클라이언트 (`services/analyzer.py`)
 - ✅ 파이프라인 오케스트레이션 (`services/pipeline.py`)
 - ✅ API 라우트: `/health`, `/articles`, `/articles/{id}`, `/analyses/{id}`, `/admin/ingest/run`
@@ -28,7 +28,7 @@
 - ✅ CORS 설정
 
 ### 문서
-- ✅ README.md (finnhub/NEWSDATA.io 기반)
+- ✅ README.md (NEWSDATA.io 기반)
 - ✅ 기획서 (docs/requirements.md)
 - ✅ 아키텍처 설계 (docs/architecture.md)
 - ✅ 백엔드 계획 (docs/backend-plan.md)
@@ -39,14 +39,11 @@
 ## 현재 구조
 
 ### 데이터 소스
-- **finnhub API**: 일반 뉴스 카테고리
 - **NEWSDATA.io API**: 한국 뉴스 (언어: ko, 국가: kr)
 
 ### 데이터 흐름
 ```
-finnhub API ──┐
-              ├──> Fetcher ──> Preprocessor ──> Gemini Analyzer ──> DB ──> FastAPI ──> React
-NEWSDATA.io ──┘
+NEWSDATA.io API ──> Fetcher ──> Preprocessor ──> Gemini Analyzer ──> DB ──> FastAPI ──> React
 ```
 
 ## 향후 개선 사항
@@ -75,13 +72,11 @@ NEWSDATA.io ──┘
 
 ## 알려진 이슈
 - Source 모델 변경으로 기존 DB 마이그레이션 필요
-- finnhub 무료 플랜은 호출 제한이 있음 (60 calls/minute)
 - NEWSDATA.io 무료 플랜은 200 credits/day
 
 ## API 키 관리
 모든 API 키는 Render.com 환경 변수로 관리:
 - `GEMINI_API_KEY`
-- `FINNHUB_API_KEY`
 - `NEWSDATA_API_KEY`
 - `DATABASE_URL` (Render PostgreSQL)
 - `ALLOWED_ORIGINS` (프론트엔드 URL)

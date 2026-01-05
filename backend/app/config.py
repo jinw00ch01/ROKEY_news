@@ -9,7 +9,6 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     gemini_api_key: str | None = None
-    finnhub_api_key: str | None = None
     newsdata_api_key: str | None = None
     database_url: str = "sqlite:///./local.db"
     allowed_origins: list[str] | str = ["*"]
