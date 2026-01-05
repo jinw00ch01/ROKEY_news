@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import logging
+import re
 import time
 from collections import deque
 from typing import Any, Deque
@@ -9,6 +11,8 @@ import httpx
 
 from app.config import get_settings
 from app.schemas import AnalyzeRequest, AnalysisResult
+
+logger = logging.getLogger(__name__)
 
 # Use v1 API with gemini-2.5-flash model (1.5 models are retired as of 2026)
 GEMINI_URL = (
@@ -55,7 +59,17 @@ class AnalyzerClient:
             data = resp.json()
 
         text = _extract_text(data)
-        parsed = json.loads(text)
+        logger.info(f"Raw Gemini response: {text[:500]}")  # Log first 500 chars
+
+        # Strip markdown code blocks if present
+        text = _strip_markdown_json(text)
+
+        try:
+            parsed = json.loads(text)
+        except json.JSONDecodeError as e:
+            logger.error(f"Failed to parse JSON. Response text: {text}")
+            raise ValueError(f"Invalid JSON response from Gemini: {e}") from e
+
         return AnalysisResult(**parsed)
 
     def _respect_rate_limit(self) -> None:
@@ -76,3 +90,18 @@ def _extract_text(response_json: dict[str, Any]) -> str:
         return response_json["candidates"][0]["content"]["parts"][0]["text"]
     except (KeyError, IndexError) as exc:
         raise ValueError("Unexpected Gemini response shape") from exc
+
+
+def _strip_markdown_json(text: str) -> str:
+    """Remove markdown code block markers from JSON response."""
+    # Remove ```json ... ``` or ``` ... ``` blocks
+    text = text.strip()
+    if text.startswith("```"):
+        # Find the first newline after the opening ```
+        first_newline = text.find("\n")
+        if first_newline != -1:
+            text = text[first_newline + 1:]
+        # Remove the closing ```
+        if text.endswith("```"):
+            text = text[:-3]
+    return text.strip()
