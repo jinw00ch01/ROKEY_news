@@ -39,8 +39,8 @@ def list_articles(
         search_conditions = [
             Article.title.ilike(like),
             Article.content_clean.ilike(like),
-            # 키워드 배열을 텍스트로 변환하여 검색 (PostgreSQL array_to_string 사용)
-            func.array_to_string(Analysis.keywords, ' ', '').ilike(like),
+            # 키워드 JSON을 텍스트로 변환하여 검색 (JSON 타입을 Text로 cast)
+            func.cast(Analysis.keywords, String).ilike(like),
         ]
         conditions.append(or_(*search_conditions))
     if sentiment:
