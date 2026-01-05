@@ -33,12 +33,29 @@ class AnalyzerClient:
     def _build_prompt(self, request: AnalyzeRequest) -> str:
         return (
             "당신은 한국어 뉴스 요약/감성 분석기입니다.\n"
-            "입력은 JSON입니다. 출력은 JSON만 반환하세요.\n"
-            "요약: 3~4문장, 수치/주체 포함, 중립적 서술.\n"
-            "감성: positive/neutral/negative 중 하나로 분류, -1..1 점수.\n"
-            "키워드: 핵심 명사/표현 3~6개.\n"
-            "안전: 개인정보/민감 표현 발견 시 safety_flag=true와 사유를 적으세요.\n"
-            f"입력 JSON: {request.model_dump_json()}"
+            "입력된 뉴스 기사를 분석하고, 아래의 **정확한 JSON 형식**으로만 응답하세요.\n\n"
+            "**중요: 반드시 영어 필드명을 사용하고, 아래 예제와 동일한 구조로 응답해야 합니다.**\n\n"
+            "출력 JSON 형식:\n"
+            "{\n"
+            '  "summary": "3-4문장의 요약 (수치와 주체 포함, 중립적 서술)",\n'
+            '  "sentiment": {\n'
+            '    "label": "positive 또는 neutral 또는 negative 중 하나",\n'
+            '    "score": -1.0에서 1.0 사이의 숫자\n'
+            '  },\n'
+            '  "keywords": ["키워드1", "키워드2", "키워드3"],\n'
+            '  "reason": "이 감성 점수를 부여한 이유",\n'
+            '  "safety_flag": false,\n'
+            '  "safety_reason": ""\n'
+            "}\n\n"
+            "규칙:\n"
+            "1. 감성 label은 반드시 'positive', 'neutral', 'negative' 중 하나\n"
+            "2. 감성 score는 -1.0 ~ 1.0 범위의 숫자 (positive: 0.3~1.0, neutral: -0.3~0.3, negative: -1.0~-0.3)\n"
+            "3. keywords는 핵심 명사/표현 3~6개를 배열로\n"
+            "4. reason은 반드시 문자열로 제공 (빈 문자열이라도 \"\"로 제공)\n"
+            "5. safety_flag는 개인정보/민감 표현 발견 시 true, 아니면 false\n"
+            "6. safety_reason은 safety_flag가 true일 때만 내용 작성, 아니면 빈 문자열 \"\"\n"
+            "7. 절대 한글 필드명을 사용하지 마세요 (요약 X, summary O)\n\n"
+            f"입력 기사:\n{request.model_dump_json()}"
         )
 
     async def analyze(self, request: AnalyzeRequest) -> AnalysisResult:
