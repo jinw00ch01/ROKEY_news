@@ -93,32 +93,42 @@ async def run_ingest(db: Session) -> dict[str, int]:
             continue
         
         fetched_count += 1
-        
-        if analyzer and article.content_clean:
-            req = AnalyzeRequest(
-                article={
-                    "title": article.title,
-                    "content": article.content_clean,
-                    "published_at": article.published_at.isoformat() if article.published_at else None,
-                    "source": src.name,
-                },
-                need_keywords=True,
-            )
-            try:
-                result = await analyzer.analyze(req)
-                analysis = Analysis(
-                    article_id=article.id,
-                    summary=result.summary,
-                    sentiment_label=result.sentiment.label,
-                    sentiment_score=result.sentiment.score,
-                    keywords=result.keywords,
-                    json_meta={"reason": result.reason, "safety": result.safety_flag},
-                    model_name="gemini-2.5-flash",
+
+        if analyzer:
+            # Finnhub의 경우 summary가 짧거나 없을 수 있으므로 title과 결합
+            content_to_analyze = article.content_clean or ""
+            if not content_to_analyze.strip() or len(content_to_analyze.strip()) < 50:
+                # 콘텐츠가 없거나 너무 짧으면 title을 포함
+                content_to_analyze = f"{article.title}. {content_to_analyze}".strip()
+                logger.info(f"Using title+content for article {article.id} (source: {src.name})")
+
+            if content_to_analyze.strip():
+                req = AnalyzeRequest(
+                    article={
+                        "title": article.title,
+                        "content": content_to_analyze,
+                        "published_at": article.published_at.isoformat() if article.published_at else None,
+                        "source": src.name,
+                    },
+                    need_keywords=True,
                 )
-                db.add(analysis)
-                analyzed_count += 1
-            except Exception as exc:  # pragma: no cover - 모니터링 목적
-                logger.exception("Analyze failed: %s", exc)
+                try:
+                    result = await analyzer.analyze(req)
+                    analysis = Analysis(
+                        article_id=article.id,
+                        summary=result.summary,
+                        sentiment_label=result.sentiment.label,
+                        sentiment_score=result.sentiment.score,
+                        keywords=result.keywords,
+                        json_meta={"reason": result.reason, "safety": result.safety_flag},
+                        model_name="gemini-2.5-flash",
+                    )
+                    db.add(analysis)
+                    analyzed_count += 1
+                except Exception as exc:  # pragma: no cover - 모니터링 목적
+                    logger.exception("Analyze failed: %s", exc)
+            else:
+                logger.warning(f"Skipping article {article.id} - no content to analyze (source: {src.name})")
         
         db.commit()
 
