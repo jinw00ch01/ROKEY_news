@@ -34,19 +34,20 @@ def list_articles(
     conditions = []
     if q:
         like = f"%{q}%"
-        # 제목, 본문, 키워드에서 검색
+        # 제목, 본문, 키워드에서 검색 (한국어 지원)
+        # ilike는 PostgreSQL에서 대소문자 무시, SQLite는 like가 기본적으로 대소문자 무시
         search_conditions = [
-            func.lower(Article.title).like(func.lower(like)),
-            func.lower(Article.content_clean).like(func.lower(like)),
-            # 키워드 배열을 텍스트로 변환하여 검색 (PostgreSQL & SQLite 호환)
-            func.cast(Analysis.keywords, String).like(like),
+            Article.title.ilike(like),
+            Article.content_clean.ilike(like),
+            # 키워드 배열을 텍스트로 변환하여 검색
+            func.cast(Analysis.keywords, String).ilike(like),
         ]
         conditions.append(or_(*search_conditions))
     if sentiment:
         conditions.append(Analysis.sentiment_label == sentiment)
     if source:
         like_source = f"%{source}%"
-        conditions.append(func.lower(Source.name).like(func.lower(like_source)))
+        conditions.append(Source.name.ilike(like_source))
     if from_date:
         conditions.append(Article.published_at >= from_date)
     if to_date:
