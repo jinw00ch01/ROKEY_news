@@ -14,7 +14,7 @@ class Source(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
-    url: Mapped[str] = mapped_column(String(1024), nullable=False, unique=True)
+    api_type: Mapped[str] = mapped_column(String(64), nullable=False)  # 'finnhub' or 'newsdata'
     active: Mapped[bool] = mapped_column(Boolean, default=True)
     last_fetched_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
 
@@ -56,4 +56,3 @@ class Analysis(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     article: Mapped["Article"] = relationship(back_populates="analysis")
-

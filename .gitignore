@@ -24,3 +24,5 @@ frontend/.vite
 docs/status.md
 # Local deploy guide (internal use)
 docs/deploy-guide.md
+
+.claude
