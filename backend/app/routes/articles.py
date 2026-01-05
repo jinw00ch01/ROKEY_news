@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Annotated, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy import and_, desc, func
+from sqlalchemy import and_, desc, func, or_, String
 from sqlalchemy.orm import Session, joinedload
 
 from app.database import get_db
@@ -34,7 +34,14 @@ def list_articles(
     conditions = []
     if q:
         like = f"%{q}%"
-        conditions.append(func.lower(Article.title).like(func.lower(like)))
+        # 제목, 본문, 키워드에서 검색
+        search_conditions = [
+            func.lower(Article.title).like(func.lower(like)),
+            func.lower(Article.content_clean).like(func.lower(like)),
+            # 키워드 배열을 텍스트로 변환하여 검색 (PostgreSQL & SQLite 호환)
+            func.cast(Analysis.keywords, String).like(like),
+        ]
+        conditions.append(or_(*search_conditions))
     if sentiment:
         conditions.append(Analysis.sentiment_label == sentiment)
     if source:
