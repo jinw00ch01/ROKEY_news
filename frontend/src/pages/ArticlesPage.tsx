@@ -45,8 +45,8 @@ export default function ArticlesPage() {
         onChange={handleFilter}
       />
       {isLoading && (
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-8">
-          {[1, 2, 3].map((k) => (
+        <div className="grid grid-cols-4 gap-8 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
+          {[1, 2, 3, 4].map((k) => (
             <SkeletonCard key={k} />
           ))}
         </div>
@@ -59,7 +59,7 @@ export default function ArticlesPage() {
       {!isLoading && data && data.items.length === 0 && (
         <div className="text-sm text-gray-600">표시할 기사가 없습니다.</div>
       )}
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-8">
+      <div className="grid grid-cols-4 gap-8 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
         {data?.items.map((article) => (
           <ArticleCard key={article.id} article={article} />
         ))}
